@@ -43,10 +43,20 @@ class BlockMerkleTree {
         "It is a binary tree hence only even number of transactions are allowed."
       );
     }
-    const parentNodeHashes: string[] = [];
-    for (let i = 0; i < transactions.length; i += 2) {
-      parentNodeHashes.push(currentTxHash);
+    // Extract tx hashes from the transactions.
+    let txHashes: string[] = transactions.map((tx) => tx.txHash);
+    // A while loop, till transaction length is only one, that is the root hash.
+    while (txHashes.length > 1) {
+      const parentNodeHashes: string[] = [];
+      // For loop for pushing 2 adjacent hashes into the parent node array.
+      for (let i = 0; i < txHashes.length; i += 2) {
+        const hashOne: string = txHashes[i];
+        const hashTwo: string = txHashes[i + 1];
+        parentNodeHashes.push(stringToSHA256(hashOne + hashTwo));
+      }
+      txHashes = parentNodeHashes;
     }
+    return txHashes[0];
   }
 }
 
@@ -60,11 +70,13 @@ class Block {
 }
 
 class Blockchain {
-  // tail:Block: | null;
-  // constructor() {
-  //   this.head = new Block(null, null);
-  //   this.tail = null;
-  // }
+  // Initialise head and tail of the doubly linked list.
+  tail: Block | null; // Handle first block.
+  head: Block | null; // Handle last block.
+  constructor() {
+    this.tail = null;
+    this.head = null;
+  }
 }
 
 // Utility function to convert a string to SHA256 hash.
