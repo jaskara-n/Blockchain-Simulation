@@ -5,6 +5,6 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "node src/index.js"
+    "start": "node src/nodeOperations.js"
   }
 }
